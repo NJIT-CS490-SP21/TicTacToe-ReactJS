@@ -16,18 +16,17 @@ export function Board(){
     }
     
     function onClickSquare(index){
+        const [winner, winning_spots] = calculateWinner();
+        if (winner !=  null){
+            return;
+        }
         const boardCopy = board.slice();
         boardCopy[index] = getValue(user)
         
-        console.log('User: ',user)
         changeUser(user)
-        console.log('Updated user: ',user)
-        
-        // console.log(user)
         
         setBoard(boardCopy);
         socket.emit('board', { board: boardCopy });
-        
     }
     
     function getValue(usr){
@@ -35,7 +34,6 @@ export function Board(){
             return 'O';
         }
         else if (usr == 1){
-            setUser( 2 );
             return 'X';
         }
         else{
@@ -43,17 +41,37 @@ export function Board(){
         }
     }
     
-    
     function changeUser(usr){
-        if (usr == 1){
-            setUser( 2 )
+        if (usr == 1){      
+            setUser( 2 ) 
         }
-        else if (usr == 2){
-            setUser( 1 )
+        else if (usr == 2){ 
+            setUser( 1 ) 
         }
     }
     
-   
+    function calculateWinner() {
+        const winning_moves = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        
+        for (let i = 0; i < winning_moves.length; i++) {
+            const [a, b, c] = winning_moves[i];
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                return [ board[a], winning_moves[i] ];
+            }
+        }
+        
+        return [null, null];
+    }
+
     
     useEffect(() => {
         socket.on('board', (data) => {
@@ -66,17 +84,29 @@ export function Board(){
         });
     }, [board, user]);
     
+    const [winner, moves] = calculateWinner();
+    let status;
+    if (winner) {
+        status = 'Winner: ' + winner;
+    } else {
+        status = 'Next player: ' + getValue(user);
+    }
+
+    
     return (
-        <div class="board" >
-            { renderSquare(0) }
-            { renderSquare(1) }
-            { renderSquare(2) }
-            { renderSquare(3) }
-            { renderSquare(4) }
-            { renderSquare(5) }
-            { renderSquare(6) }
-            { renderSquare(7) }
-            { renderSquare(8) }
+        <div>
+            <div> { status } </div>
+            <div class="board" >
+                { renderSquare(0) }
+                { renderSquare(1) }
+                { renderSquare(2) }
+                { renderSquare(3) }
+                { renderSquare(4) }
+                { renderSquare(5) }
+                { renderSquare(6) }
+                { renderSquare(7) }
+                { renderSquare(8) }
+            </div>
         </div>
     );
 }
