@@ -59,7 +59,14 @@ def on_reset():
 def on_login( data ):
     print(data)
     userList.append(data)
-    socketio.emit('login', userList, broadcast=True, include_self=True)
+    if len(userList) == 1:
+        perm = 'X'
+    elif len(userList) == 2:
+        perm = 'O'
+    else:
+        perm ='S'
+    send = [userList, perm]
+    socketio.emit('login', send , broadcast=True, include_self=True)
 
 @socketio.on('logout')
 def on_logout( data ):
