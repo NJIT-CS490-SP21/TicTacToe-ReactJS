@@ -1,5 +1,4 @@
 import { ListItem } from './ListItem.js';
-
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 

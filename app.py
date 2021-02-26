@@ -14,6 +14,9 @@ socketio = SocketIO(
     manage_session=False
 )
 
+
+
+
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
 def index(filename):
@@ -52,7 +55,15 @@ def on_board(data): # data is whatever arg you pass in your emit call on client
 def on_reset():
     socketio.emit('reset', broadcast=True, include_self=False)
 
+@socketio.on('login')
+def on_login( data ):
+    print(data)
+    socketio.emit('login', data, broadcast=True, include_self=False)
 
+@socketio.on('logout')
+def on_logout( data ):
+    print(data)
+    socketio.emit('logout', data, broadcast=True, include_self=False)
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(
     app,
