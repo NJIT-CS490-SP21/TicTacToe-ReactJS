@@ -14,7 +14,7 @@ socketio = SocketIO(
     manage_session=False
 )
 
-
+userList = []
 
 
 @app.route('/', defaults={"filename": "index.html"})
@@ -58,7 +58,8 @@ def on_reset():
 @socketio.on('login')
 def on_login( data ):
     print(data)
-    socketio.emit('login', data, broadcast=True, include_self=False)
+    userList.append(data[-1])
+    socketio.emit('login', userList, broadcast=True, include_self=True)
 
 @socketio.on('logout')
 def on_logout( data ):
