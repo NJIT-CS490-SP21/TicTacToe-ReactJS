@@ -8,7 +8,7 @@ const socket = io();
 export function Board(){
     const [board,setBoard] = useState( Array(9).fill(null) );
     const [user,setUser] = useState(1);
-    const index = 0;
+    let index = 0;
     
     function renderSquare(i) {
         return ( <Square index={ i } value={ board[i] }  onClick={ ()=>onClickSquare(i) } /> );
@@ -91,7 +91,7 @@ export function Board(){
             console.log('Board event received!');
             console.log(data);
             console.log(index);
-            index = index +1;
+            index = index + 1;
             
             const boardCopy = data.board;
             setBoard( boardCopy );
