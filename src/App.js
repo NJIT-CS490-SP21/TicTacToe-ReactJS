@@ -1,9 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
 import { ListItem } from './ListItem.js';
 import { Board } from './Board.js';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
+import { Login } from './Login.js';
 
 
 const socket = io(); // Connects to socket connection
@@ -37,18 +37,24 @@ function App() {
         });
     }, []);
 
+    if (false) {
+        return (
+            <div>
+                <Login />
+            </div>
+        );
+    }    
+    
     return (
         <div>
-      <h1>Chat Messages</h1>
-      Enter message here: <input ref={inputRef} type="text" />
-      <button onClick={onClickButton}>Send</button>
-      <ul>
-        {messages.map((item, index) => <ListItem key={index} name={item} />)}
-      </ul>
-      
-      <Board />
-      
-    </div>
+            <h1>Chat Messages</h1>
+            Enter message here: <input ref={inputRef} type="text" />
+            <button onClick={onClickButton}>Send</button>
+            <ul>
+                {messages.map((item, index) => <ListItem key={index} name={item} />)}
+            </ul>
+            <Board />
+        </div>
     );
 }
 

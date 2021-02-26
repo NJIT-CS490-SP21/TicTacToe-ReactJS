@@ -23,9 +23,10 @@ export function Board(){
         boardCopy[index] = getValue(user)
         
         changeUser(user)
-        
         setBoard(boardCopy);
-        socket.emit('board', { board: boardCopy });
+        
+        const userCopy = user;
+        socket.emit('board', { board: boardCopy, user: userCopy});
     }
     
     function getValue(usr){
@@ -93,9 +94,8 @@ export function Board(){
             console.log(index);
             index = index + 1;
             
-            const boardCopy = data.board;
-            setBoard( boardCopy );
-            changeUser(user)
+            setBoard( data.board );
+            changeUser(data.user)
         });
         
         socket.on('reset', () => {
@@ -104,7 +104,7 @@ export function Board(){
             setUser( 1 )
         });
         
-    }, [board, user]);
+    }, []);
     
     const [winner, moves] = calculateWinner();
     const tie = calculateTie();
@@ -118,9 +118,6 @@ export function Board(){
     } else{
         status = 'Next player: ' + getValue(user);
     }
-    
-    // UPDATE PLAY AGAIN
-    let play_again;
     
     
     return (
