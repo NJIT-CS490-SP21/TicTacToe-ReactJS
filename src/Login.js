@@ -11,22 +11,21 @@ export function Login() {
     const [login, setLogin] = useState(false);
     const [usernameError, setError] = useState('');
     const [users, setUsers] = useState([]);
+    const [username, setUsername] = useState('waky slime');
     
     
     const inputRef = useRef(null);
-    
-    let username;
     
     function onClickLogin() {
         if (inputRef == null || inputRef.current.value == '') {
             setError("You must enter a username");
             return;
         }
-        username = inputRef.current.value;
+        const input = inputRef.current.value
+        setUsername( input );
     
-        
-        setUsers(prev => [...prev, username]);
-        socket.emit('login', [...users, username]);
+        setUsers(prev => [...prev, input]);
+        socket.emit('login', input);
         setLogin(true);
     }
     
@@ -42,7 +41,7 @@ export function Login() {
         
         setUsers(usersCopy);
         
-        socket.emit('logout', {users: users})
+        socket.emit('logout', username )
     }
     
     useEffect(() => {
@@ -53,10 +52,9 @@ export function Login() {
         });
         
         socket.on('logout', (data) => {
-            console.log('Chat event received!');
+            console.log('logout event received!');
             console.log(data);
-            
-            setUsers(data.users);
+            setUsers(data);
         });
         
     }, []);

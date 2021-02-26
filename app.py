@@ -58,13 +58,15 @@ def on_reset():
 @socketio.on('login')
 def on_login( data ):
     print(data)
-    userList.append(data[-1])
+    userList.append(data)
     socketio.emit('login', userList, broadcast=True, include_self=True)
 
 @socketio.on('logout')
 def on_logout( data ):
-    print(data)
-    socketio.emit('logout', data, broadcast=True, include_self=False)
+    print("Removing", data)
+    print(userList)
+    userList.remove(data)
+    socketio.emit('logout', userList, broadcast=True, include_self=True)
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(
     app,
