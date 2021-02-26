@@ -81,6 +81,10 @@ export function Board(){
     }
     
     
+    function onClickPlayAgain(){
+        setBoard( Array(9).fill(null) )
+        setUser( 1 )
+    }
     
     useEffect(() => {
         socket.on('board', (data) => {
@@ -96,6 +100,7 @@ export function Board(){
     const [winner, moves] = calculateWinner();
     const tie = calculateTie();
     
+    // UPDATE STATUS
     let status;
     if (winner) {
         status = 'Winner: ' + winner;
@@ -104,7 +109,10 @@ export function Board(){
     } else{
         status = 'Next player: ' + getValue(user);
     }
-
+    
+    // UPDATE PLAY AGAIN
+    let play_again;
+    
     
     return (
         <div>
@@ -120,6 +128,10 @@ export function Board(){
                 { renderSquare(7) }
                 { renderSquare(8) }
             </div>
+            {winner||tie?
+            <button onClick={onClickPlayAgain}> Play Again </button>: null
+            }
+            
         </div>
     );
 }
