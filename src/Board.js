@@ -80,7 +80,6 @@ export function Board(){
         return false;
     }
     
-    
     function onClickPlayAgain(){
         setBoard( Array(9).fill(null) )
         setUser( 1 )

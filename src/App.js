@@ -9,22 +9,9 @@ import io from 'socket.io-client';
 const socket = io(); // Connects to socket connection
 
 function App() {
-    
-
-    
-    if (false) {
-        return (
-            <div>
-                <Login />
-            </div>
-        );
-    }    
-    
     return (
         <div>
-            <Board />
-            
-            <Chat />
+            <Login />
         </div>
     );
 }
