@@ -8,8 +8,7 @@ const socket = io();
 export function Board(){
     const [board,setBoard] = useState( Array(9).fill(null) );
     const [user,setUser] = useState(1);
-    
-    console.log("Board", board);
+    const index = 0;
     
     function renderSquare(i) {
         return ( <Square index={ i } value={ board[i] }  onClick={ ()=>onClickSquare(i) } /> );
@@ -84,17 +83,27 @@ export function Board(){
     function onClickPlayAgain(){
         setBoard( Array(9).fill(null) )
         setUser( 1 )
+        socket.emit('reset', );
     }
     
     useEffect(() => {
         socket.on('board', (data) => {
             console.log('Board event received!');
             console.log(data);
+            console.log(index);
+            index = index +1;
             
             const boardCopy = data.board;
             setBoard( boardCopy );
             changeUser(user)
         });
+        
+        socket.on('reset', () => {
+            console.log('Reset event received!')
+            setBoard( Array(9).fill(null) )
+            setUser( 1 )
+        });
+        
     }, [board, user]);
     
     const [winner, moves] = calculateWinner();
@@ -128,6 +137,7 @@ export function Board(){
                 { renderSquare(7) }
                 { renderSquare(8) }
             </div>
+            <br />
             {winner||tie?
             <button onClick={onClickPlayAgain}> Play Again </button>: null
             }
