@@ -3,6 +3,7 @@ import './Board.css';
 import { Square } from './Square.js';
 import io from 'socket.io-client';
 
+const socket = io();
 
 export function Board(){
     const [board,setBoard] = useState( Array(9).fill('') );
@@ -25,6 +26,7 @@ export function Board(){
         // console.log(user)
         
         setBoard(boardCopy);
+        socket.emit('board', { board: boardCopy });
         
     }
     
@@ -50,6 +52,19 @@ export function Board(){
             setUser( 1 )
         }
     }
+    
+   
+    
+    useEffect(() => {
+        socket.on('board', (data) => {
+            console.log('Board event received!');
+            console.log(data);
+            
+            const boardCopy = data.board;
+            setBoard( boardCopy );
+            changeUser(user)
+        });
+    }, [board, user]);
     
     return (
         <div class="board" >
