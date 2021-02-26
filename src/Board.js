@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 const socket = io();
 
 export function Board(){
-    const [board,setBoard] = useState( Array(9).fill('') );
+    const [board,setBoard] = useState( Array(9).fill(null) );
     const [user,setUser] = useState(1);
     
     console.log("Board", board);
@@ -17,7 +17,7 @@ export function Board(){
     
     function onClickSquare(index){
         const [winner, winning_spots] = calculateWinner();
-        if (winner !=  null){
+        if (board[index] || winner !=  null){
             return;
         }
         const boardCopy = board.slice();
@@ -71,7 +71,16 @@ export function Board(){
         
         return [null, null];
     }
-
+    
+    function calculateTie() {
+        const [winner, moves] = calculateWinner();
+        if (board[0] && board[1] && board[2] && board[3] && board[4] && board[5] && board[6] && board[7] && board[8] && winner == null){
+            return true;
+        }
+        return false;
+    }
+    
+    
     
     useEffect(() => {
         socket.on('board', (data) => {
@@ -85,10 +94,14 @@ export function Board(){
     }, [board, user]);
     
     const [winner, moves] = calculateWinner();
+    const tie = calculateTie();
+    
     let status;
     if (winner) {
         status = 'Winner: ' + winner;
-    } else {
+    } else if(tie){
+        status = "Tie!!"
+    } else{
         status = 'Next player: ' + getValue(user);
     }
 
