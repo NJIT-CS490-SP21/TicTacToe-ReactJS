@@ -5,11 +5,17 @@ export function Login() {
     
     const inputRef = useRef(null);
     
+    function onClickLogin(){
+        if (inputRef != null) {
+            const username = inputRef.current.value;
+        }
+    }
     
     return (
         <div>
             <h1>Login</h1>
-            Enter message here: <input ref={inputRef} type="text" />
+            Username: <input ref={inputRef} type="text" />
+            <button onClick={onClickLogin}>Login</button>
         </div>    
     );
 }
