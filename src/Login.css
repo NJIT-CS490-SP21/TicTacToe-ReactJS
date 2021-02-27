@@ -38,7 +38,9 @@ h1 {
 h3 {
     text-align: center;
     color: black;
-    font-size: 60px;
+    font-size: 45px;
+    font-weight: 500;
+    vertical-align: top;
     
 }
 
@@ -149,7 +151,7 @@ p3 {
     width: 815px;
     margin: 10px;
     float: left;
-    background-color: blue;
+    /*background-color: blue;*/
     padding: 0px 0px;
 }
 
