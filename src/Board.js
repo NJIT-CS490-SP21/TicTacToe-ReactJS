@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 
 const socket = io();
 
-export function Board(){
+export function Board(props){
     const [board,setBoard] = useState( Array(9).fill(null) );
     const [user,setUser] = useState(1);
     let index = 0;
@@ -15,6 +15,14 @@ export function Board(){
     }
     
     function onClickSquare(index){
+        if (props.perm == 'S'){
+            return;
+        }
+        
+        if (props.perm != getValue(user)){
+            return;
+        }
+        
         const [winner, winning_spots] = calculateWinner();
         if (board[index] || winner !=  null){
             return;

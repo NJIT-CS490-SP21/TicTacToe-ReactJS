@@ -6,7 +6,7 @@ import { Board } from './Board.js';
 import { ListItem } from './ListItem.js';
 import logo from './logo.svg';
 
-import './Login.css'
+import './Login.css';
 
 const socket = io();
 
@@ -16,7 +16,7 @@ export function Login() {
 
     const [users, setUsers] = useState([]);
     const [username, setUsername] = useState('');
-    const [permission, setPermission] = useState(null)
+    const [permission, setPermission] = useState(null);
 
     const inputRef = useRef(null);
     
@@ -25,7 +25,7 @@ export function Login() {
             setError("You must enter a username");
             return;
         }
-        const input = inputRef.current.value
+        const input = inputRef.current.value;
         setUsername(input);
         
         setUsers(prev => [...prev, input]);
@@ -43,7 +43,7 @@ export function Login() {
         usersCopy.splice(index, 1);
         setUsers(usersCopy);
 
-        socket.emit('logout', username)
+        socket.emit('logout', username);
     }
 
     useEffect(() => {
@@ -69,11 +69,22 @@ export function Login() {
             console.log('logout event received!');
             console.log(data);
             setUsers(data);
+            
+            if (data[0] == username) {
+                console.log("Permissions set to X");
+                setPermission('X');
+            } else if (data[1] == username){
+                console.log("Permissions set to O");
+                setPermission('O');
+            } else {
+                console.log("Permissions set to S");
+                setPermission('S');
+            }
         });
 
-    }, []);
+    }, [username]);
 
-    if (false) {//(!login) {
+    if (!login) {
         return (
             <div class='login'>
                 <h1>Login  <img src={logo} className="App-logo" alt="logo" /> </h1>   
@@ -89,7 +100,7 @@ export function Login() {
             </div>
         );
     }
-    else if (true) { //(login) {
+    else if (login) {
         return (
             <div class='screen'>
                 <div>
@@ -99,7 +110,7 @@ export function Login() {
                 
                 
                 <div class='board'>
-                    <Board />
+                    <Board perm={ permission }/>
                 </div>
                 
                 <div class='one'>

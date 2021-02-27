@@ -57,7 +57,7 @@ def on_reset():
 
 @socketio.on('login')
 def on_login( data ):
-    print(data)
+    print("Adding:", data)
     userList.append(data)
     socketio.emit('login', userList , broadcast=True, include_self=True)
 

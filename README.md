@@ -26,7 +26,16 @@
 1. When one of the clients exits the browser without logging out, the logout event will not be emitted so the username will not be taken out from list.  This would destroy the current server because new users would be added to the end of the list.  Since the permissions is derived from the begining of the list, the user would take up one of the 'X' or 'O' permission spots, thereby ruining the current server.  
  
     I would fix this by periodically having a ping to the current users.  If I do not get a response within a certain time frame, that user would be taken off of the list and the next user in the list will replace them.
-2. 
+
+    Another way I could fix this is keeping track of the disconnect.  There may be a way to track the id of the person who disconnected.  I would then be able to take that unique id's username from the user list.  I would have to make the user list a dictionary and map the client id's to their respective usernames.
+2. Another problem my code has is the chat feature and the user list displayed feature.  My css for the page is only up to a certain height.  This means that when there are many users or messages in the chat, the browser becomes scrollable and can scroll down to see the added messages or users.  This is a problem because my background-image for the page does not go that low.
+
+    I would fix this by having the list of messages and the list of users, scrollable.  This would make the local block scrollable instead of the whole page. Then there would be no conflict with the page and everything would belong to the local block.
+    
+    I was also thinking of making the text smaller and having the padding between each bullet point very small. Right now like only 5 messages are needed to reach the defined edge of the background-image, this would make the problem less noticable by increasing this amount to maybe almost double. 
+    
+    I could also overhaul the listItem for the users and display the users in a scrollable table.  This would look a lot better than the current list and could be expanded on to do some interesting things.  Like, when clicked, go automatically scroll to the nearest chat from them. Or display how long they were in the queue when hovered.  Interesting things could come from fixing the users like this.
+3. Another problem I encountered was doing the permissions.  I was sending setting the username state before the emit but when it went back to the useEffect, username would not be changed.  I fixed this by having the username in the brackets at the end of the useEffect.  This made my problem though.  I would recieve 2 login events then.  Nothing would change, but the username would be updated.  My problem is that only one login event should appear.    
 
 ## Technical Issues
 
