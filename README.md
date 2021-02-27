@@ -39,7 +39,6 @@
     I could also overhaul the listItem for the users and display the users in a scrollable table.  This would look a lot better than the current list and could be expanded on to do some interesting things.  Like, when clicked, go automatically scroll to the nearest chat from them. Or display how long they were in the queue when hovered.  Interesting things could come from fixing the users like this.
 3. Another problem I encountered was doing the permissions.  I was sending setting the username state before the emit but when it went back to the useEffect, username would not be changed.  I fixed this by having the username in the brackets at the end of the useEffect.  This made my problem though.  I would recieve 2 login events then.  Nothing would change, but the username would be updated.  My problem is that only one login event should appear.    
 
-4. Another problem I found out was when Player X logged out.  Player O would move to Player X and a Player S would move to Player O.  I would have to, on the logout check to see if player X is leaving and then if so, check if the list is > 2 and then switch Player 3 with Player X. then just remove Player X.  The permissions would automatically update.
 ## Technical Issues
 
 1. I was having a problem with updating the status of the board.  Originally, status was a state and every click, it would check winner and then be displayed in the return. However, the browser would always display an empty string.  I added logs and check them and I found out that status was never being updated before it reached the return.  
@@ -55,3 +54,7 @@
     My first thought was that it is recursively running the useEffect every time, which it was.  I had setBoard inside of the useEffect and then I was also having the board in the array, which would set the board, check the changes, it does, emit, to server, go to useEffect, set it again, until there were no more changes. I was able to fix most of the problem by changing the array to [user]. I checked the console logs and it decreased the logs to only n times every time I clicked.  So, 1 emit, 2 emits, so on and so forth. I assumed the same thing so I made it an empty array, []. Which fixed the emit problem. So only one emit was happening every click, which was perfect.
     
     I encountered another problem at this stage, the user was not updating accross the different browsers.  This was an easy fix by just adding another element to the dictionary being passed, {... users: users}. Just fixed up the onClick and the useEffect a little more to update accordingly and then everything worked as it should. 
+
+3. Another issue I fixed was when Player X logged out.  Player O would move to Player X and a Player S would move to Player O.  
+
+    I fixed this by, on the logout, check to see if player X is leaving and then if so, check if the list is > 2 and then switch Player 3 with Player X. then just remove Player X.  The permissions would automatically update.
