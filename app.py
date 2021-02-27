@@ -63,6 +63,13 @@ def on_login( data ):
 
 @socketio.on('logout')
 def on_logout( data ):
+    # swap player x with first player s
+    if (userList[0] == data and len(userList) > 2):
+        temp = userList[0]
+        userList[0] = userList[2]
+        userList[2] = temp
+        
+    
     print("Removing", data)
     print(userList)
     userList.remove(data)
