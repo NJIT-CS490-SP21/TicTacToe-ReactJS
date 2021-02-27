@@ -148,11 +148,11 @@ p3 {
 }
 
 .one {
-    width: 815px;
+    width: 400px;
     margin: 10px;
     float: left;
-    /*background-color: blue;*/
-    padding: 0px 0px;
+    background-color: blue;
+    padding: 0px 150px;
 }
 
 /*button {*/
