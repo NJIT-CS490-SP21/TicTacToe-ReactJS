@@ -1,0 +1,23 @@
+input {
+    text-align: center;
+    color: black;
+    
+}
+
+
+message {
+    text-align: center;
+    color: black;
+    font-size: 60px;
+}
+
+enterMessage {
+     font-weight: bold;
+     font-size: 20px;
+}
+.chat {
+    display:block;
+    width:200px;
+    height:100px;
+    margin: 13px auto 0;
+}

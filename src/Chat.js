@@ -2,6 +2,8 @@ import { ListItem } from './ListItem.js';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 
+import './Chat.css';
+
 const socket = io();
 
 export function Chat() {
@@ -35,9 +37,9 @@ export function Chat() {
     
     
     return (
-        <div>
-            <h1>Chat Messages</h1>
-            Enter message here: <input ref={inputRef} type="text" />
+        <div class='chat'>
+            <message>Chat:</message> <br />
+            <enterMessage> Enter message here: <input ref={inputRef} type="text" /> </enterMessage>
             <button onClick={onClickButton}>Send</button>
             <ul>
                 {messages.map((item, index) => <ListItem key={index} name={item} />)}

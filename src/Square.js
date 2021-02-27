@@ -1,5 +1,5 @@
 import { useState} from 'react';
-
+import './Square.css'
 export function Square(props){
     const [square,setSquare] = useState('');
     

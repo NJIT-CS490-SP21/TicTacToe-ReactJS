@@ -121,7 +121,7 @@ export function Board(){
     
     return (
         <div>
-            <div> { status } </div>
+            <player> { status } </player>
             <div class="board" >
                 { renderSquare(0) }
                 { renderSquare(1) }
