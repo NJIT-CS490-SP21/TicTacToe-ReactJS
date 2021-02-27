@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { Chat } from './Chat.js';
 import { Board } from './Board.js';
 import { ListItem } from './ListItem.js';
+import logo from './logo.svg';
 
 import './Login.css'
 
@@ -51,9 +52,14 @@ export function Login() {
         socket.on('login', (data) => {
             console.log('login event received!');
             console.log(data);
-            setUsers(data[0]);
-            setPermission(data[1])
-
+            setUsers(data);
+            if (users[0] == username) {
+                setPermission('X');
+            } else if (users[1] == username){
+                setPermission('O');
+            } else {
+                setPermission('S');
+            }
         });
 
         socket.on('logout', (data) => {
@@ -67,16 +73,15 @@ export function Login() {
     if (!login) {
         return (
             <div class='login'>
-                <div>
-                    <h1>Login</h1>
-                    <p1> Please the username you are going to be using while in our server.</p1> <br />
-                    <p2>Username: <input ref={inputRef} type="text" /> </p2> <br />
-                    
-                    <button onClick={onClickLogin}>Login</button>
+                <h1>Login  <img src={logo} className="App-logo" alt="logo" /> </h1>   
+                
+                <p1> Please enter the username you are going to be using while in our server.</p1> <br />
+                <div class='username'>
+                    <p2>Username: <input ref={inputRef} type="text" /> </p2> 
+                    <button class='button' onClick={onClickLogin}>Login</button>
+                    <p3> { usernameError } </p3>
                 </div>
-                <div>
-                    { usernameError }
-                </div>
+                
                 
             </div>
         );
