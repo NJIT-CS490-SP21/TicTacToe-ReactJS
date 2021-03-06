@@ -22,11 +22,16 @@
 2. Add nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
 3. Push to Heroku: `git push heroku main`
 
-## Problems
+## Problems/Future Addons
 
 1. Implementing the .env for the database. Whenever I did `os.getenv('DATAB_URL')`, it was giving me a different DATABASE URL than the one I entered.  There was no reason for that to happen because I clearly did not have any other variables.  I even deleted the content of DATABASE_URL and then even the file, but it was still giving me the same string.
 
    I was able to fix this by changing the variable name, but this is still a problem because I do not know if it will carry onto the clone.  I do not think so because it is a .env file so there would be no commit for this but better to be safe than sorry.
+   
+2. I do not have any more problems that I am currently aware of so here are a couple future addons I can do.
+    
+    * I could expand my database to include passwords.  This means that people could have their own usernames unique to them.  It would be pretty simple to set up.  Have another column in the database named passwords.  When logging in ask for a password and if the password matches, login successfully. If not display error and do not login. Just have to make sure the passwords are never emitted anywhere so people could not easily find them on the console.
+    *  I could also expand my database to include the playing history.  This would display who you played against and the outcome of the match.  This would just be another nested array within the database.  There might be some issues with assigning space for the row but that would be later.
    
 
 ## Technical Issues
@@ -35,14 +40,6 @@
 
     I was able to fix this by making functions that returned the classes.  These classes will accept db as a parameter.  This means that I do not have to import db in models. This fixed the circular loop of imports.
 
-2. I was also having an issue with...
+2. I was also having an issue with emitting my outcome of the match.  My thought proccess was to have Player 'X' be the only one to send the emits, but when I emitted I was also recieving an emit, so it would update the page and re-emit again.  This would also re-emit the outcome for every emit to the page that doesn't reset the board. 
 
-3. I was also having a problem with my emits.  I originally found this problem because whenever I pressed play again, it would not update for a couple seconds.  This then increased a ton as I kept playing.  I added console logs and checked the console and I found out my emits were going off of the charts.  In my array after the useEffect I included [board, user], so it would first update the board and then the user for every client.  What this did instead was it would emit 2n - 1 times every time another square was clicked. So 1 emits and then 3, then 5... for every single click.  I didn't notice it before because of the low running time of those emits, but as I kept running the program, the lag increased a lot.
-
-    My first thought was that it is recursively running the useEffect every time, which it was.  I had setBoard inside of the useEffect and then I was also having the board in the array, which would set the board, check the changes, it does, emit, to server, go to useEffect, set it again, until there were no more changes. I was able to fix most of the problem by changing the array to [user]. I checked the console logs and it decreased the logs to only n times every time I clicked.  So, 1 emit, 2 emits, so on and so forth. I assumed the same thing so I made it an empty array, []. Which fixed the emit problem. So only one emit was happening every click, which was perfect.
-    
-    I encountered another problem at this stage, the user was not updating accross the different browsers.  This was an easy fix by just adding another element to the dictionary being passed, {... users: users}. Just fixed up the onClick and the useEffect a little more to update accordingly and then everything worked as it should. 
-
-4. Another issue I fixed was when Player X logged out.  Player O would move to Player X and a Player S would move to Player O.  
-
-    I fixed this by, on the logout, check to see if player X is leaving and then if so, check if the list is > 2 and then switch Player 3 with Player X. then just remove Player X.  The permissions would automatically update in the useEffect.
+    I fixed this by changing the code to emit the outcome on clicking a square.  I then had to change my code again because my emits were only emitted by Player 'X'.  So I made it so the winner would emit the outcome.  I also had to make special functions to calculate if that specific move lead to a win/tie and then if so, emit.

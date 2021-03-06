@@ -160,17 +160,7 @@ export function Board(props){
     const [winner, moves] = calculateWinner();
     const tie = calculateTie();
     
-    // UPDATE STATUS
-    // SEND MATCH EMIT  
-        if (winner) {
-            
-        }
-        if (tie){
-            
-        }
-    
-    
-    console.log("Update status")
+    console.log("Update status");
     let status;
     if (winner) {
         status = 'Winner: ' + winner;
