@@ -10,15 +10,6 @@ load_dotenv(find_dotenv())
 
 app = Flask(__name__, static_folder='./build/static')
 
-# print('\n\n')
-# print("Find:", find_dotenv())
-# print()
-# print("DATA:", os.getenv('DATAB_URL'))
-# print()
-# print("LOAD:", load_dotenv("") )
-# print('\n\n')
-
-
 # Point SQLAlchemy to your Heroku database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATAB_URL')
 # Gets rid of a warning
@@ -26,9 +17,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-import model
-db.create_all()
+import models
+if __name__ =='__main__':
+    db.create_all()
 
+Player= models.getPlayerClass(db)
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -53,9 +46,15 @@ def on_connect():
     print('User connected!')
     
     # change to make order by DESCENDING
-    leaderboard = model.Player.query.all()
+    leaderboard = Player.query.all()
+    print("Leaders", leaderboard, "\n\n")
     
-    socketio.emit('leaderboard', leaderboard)
+    players = []
+    for player in leaderboard:
+        players.append( [player.username, player.score] )
+    print("Players:", players)
+    
+    socketio.emit('leaderboard', players)
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
@@ -89,16 +88,35 @@ def on_reset():
 def on_login( data ):
     print("Adding:", data)
     userList.append(data)
+    socketio.emit('login', userList , broadcast=True, include_self=True)
+    
+    leaderboard = Player.query.all()
+    print("\n\nFirst:",leaderboard)
+
+    players = []
+    appendUser = True
+    for player in leaderboard:
+        players.append( [player.username, player.score] )
+        if player.username == data:
+            appendUser = False
+    print("Players:", players)
     
     # update leaderboard
-    player = model.Player(data, 0)
-    db.session.add(player)
-    db.session.commit()
-    leaderboard = model.Player.query.all()
-    print("\n\n",leaderboard)
+    if appendUser:
+        player = Player(username=data, score=0)
+        db.session.add(player)
+        db.session.commit()
+    
+    leaderboard = Player.query.all()
+    print("\n\nSecond:",leaderboard)
+    players = []
+    for player in leaderboard:
+        players.append( [player.username, player.score] )
+        
+    print("Players:", players)
     
     socketio.emit('leaderboard', leaderboard, broadcast=True, include_self=True)
-    socketio.emit('login', userList , broadcast=True, include_self=True)
+    
 
 @socketio.on('logout')
 def on_logout( data ):
