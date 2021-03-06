@@ -3,9 +3,8 @@ import './Board.css';
 import { Square } from './Square.js';
 import io from 'socket.io-client';
 
-const socket = io();
-
 export function Board(props){
+    const socket = props.socket
     const [board,setBoard] = useState( Array(9).fill(null) );
     const [user,setUser] = useState(1);
     let index = 0;

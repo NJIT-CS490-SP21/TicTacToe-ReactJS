@@ -39,6 +39,11 @@
     I could also overhaul the listItem for the users and display the users in a scrollable table.  This would look a lot better than the current list and could be expanded on to do some interesting things.  Like, when clicked, go automatically scroll to the nearest chat from them. Or display how long they were in the queue when hovered.  Interesting things could come from fixing the users like this.
 3. Another problem I encountered was doing the permissions.  I was sending setting the username state before the emit but when it went back to the useEffect, username would not be changed.  I fixed this by having the username in the brackets at the end of the useEffect.  This made another problem though.  I would recieve 2 login events then.  Nothing would change, but the username would be updated.  My problem is that only one login event should appear.    
 
+4. Implementing the .env for the database. Whenever I did `os.getenv('DATAB_URL')`, it was giving me a different DATABASE URL than the one I entered.  There was no reason for that to happen because I clearly did not have any other variables.  I even deleted the content of DATABASE_URL and then even the file, but it was still giving me the same string.
+
+   I was able to fix this by changing the variable name, but this is still a problem because I do not know if it will carry onto the clone.  I do not think so because it is a .env file so there would be no commit for this but better to be safe than sorry.
+   
+
 ## Technical Issues
 
 1. I was having a problem with updating the status of the board.  Originally, status was a state and every click, it would check winner and then be displayed in the return. However, the browser would always display an empty string.  I added logs and check them and I found out that status was never being updated before it reached the return.  

@@ -4,9 +4,8 @@ import io from 'socket.io-client';
 
 import './Chat.css';
 
-const socket = io();
-
-export function Chat() {
+export function Chat(props) {
+    const socket = props.socket
     const [messages, setMessages] = useState([]); // State variable, list of messages
     const inputRef = useRef(null); // Reference to <input> element
 

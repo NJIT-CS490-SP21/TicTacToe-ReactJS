@@ -8,9 +8,8 @@ import logo from './logo.svg';
 
 import './Login.css';
 
-const socket = io();
-
-export function Login() {
+export function Login(props) {
+    const socket = props.socket
     const [login, setLogin] = useState(false);
     const [usernameError, setError] = useState('');
 
@@ -110,11 +109,11 @@ export function Login() {
                 
                 
                 <div class='board'>
-                    <Board perm={ permission }/>
+                    <Board socket={socket} perm={ permission }/>
                 </div>
                 
                 <div class='one'>
-                    <Chat />
+                    <Chat socket={socket} />
                 </div>
                 <div class='one'>
                     <h3> List of logged users: </h3>
