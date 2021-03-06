@@ -46,7 +46,7 @@ def on_connect():
     print('User connected!')
     
     # change to make order by DESCENDING
-    leaderboard = Player.query.all()
+    leaderboard = Player.query.order_by(Player.score.desc()).all()
     print("Leaders", leaderboard, "\n\n")
     
     players = []
@@ -143,10 +143,21 @@ socketio.run(
 def on_match( data ): # data will be 'X','O',or 'S'.  Will only be sent by 'X'
     if data == 'X':
         # add 1 to 'X', subtract 1 from 'O'
-        print(data)
+        winner = Player.query.filter_by(username=userList[0]).first()
+        winner.score = winner.score + 1
+        
+        loser = Player.query.filter_by(username=userList[1]).first()
+        loser.score = loser.score - 1
+        db.session.commit()
     elif data == 'O':
         # subtract 1 from 'X', add 1 to 'O'
-        print(data)
+        winner = Player.query.filter_by(username=userList[1]).first()
+        winner.score = winner.score + 1
+        
+        loser = Player.query.filter_by(username=userList[0]).first()
+        loser.score = loser.score - 1
+        db.session.commit()
+        
     elif data == 'Tie':
         # do nothing
         print(data)
