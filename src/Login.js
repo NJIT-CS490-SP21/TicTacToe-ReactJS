@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
+import logo from './logo.svg';
 
 import { Chat } from './Chat.js';
 import { Board } from './Board.js';
 import { ListItem } from './ListItem.js';
-import logo from './logo.svg';
+import { Leaderboard } from './Leaderboard.js';
 
 import './Login.css';
 
@@ -16,6 +17,8 @@ export function Login(props) {
     const [users, setUsers] = useState([]);
     const [username, setUsername] = useState('');
     const [permission, setPermission] = useState(null);
+    
+    
 
     const inputRef = useRef(null);
     
@@ -45,6 +48,7 @@ export function Login(props) {
         socket.emit('logout', username);
     }
 
+    // LOGIN AND LOGOUT
     useEffect(() => {
         socket.on('login', (data) => {
             console.log('login event received!');
@@ -80,12 +84,13 @@ export function Login(props) {
                 setPermission('S');
             }
         });
-
+        
     }, [username]);
+
 
     if (!login) {
         return (
-            <div class='login'>
+            <div className='login'>
                 <h1>Login  <img src={logo} className="App-logo" alt="logo" /> </h1>   
                 
                 <p1> Please enter the username you are going to be using while in our server.</p1> <br />
@@ -93,6 +98,10 @@ export function Login(props) {
                     <p2>Username: <input class='loginInput' ref={inputRef} type="text" /> </p2> 
                     <button class='button' onClick={onClickLogin}>Login</button>
                     <p3> { usernameError } </p3>
+                </div>
+                
+                <div>
+                    <Leaderboard socket={socket} />
                 </div>
                 
                 

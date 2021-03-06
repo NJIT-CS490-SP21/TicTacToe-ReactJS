@@ -26,8 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-import models
-
+import model
 db.create_all()
 
 
@@ -52,6 +51,11 @@ def index(filename):
 @socketio.on('connect')
 def on_connect():
     print('User connected!')
+    
+    # change to make order by DESCENDING
+    leaderboard = model.Player.query.all()
+    
+    socketio.emit('leaderboard', leaderboard)
 
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
@@ -85,6 +89,15 @@ def on_reset():
 def on_login( data ):
     print("Adding:", data)
     userList.append(data)
+    
+    # update leaderboard
+    player = model.Player(data, 0)
+    db.session.add(player)
+    db.session.commit()
+    leaderboard = model.Player.query.all()
+    print("\n\n",leaderboard)
+    
+    socketio.emit('leaderboard', leaderboard, broadcast=True, include_self=True)
     socketio.emit('login', userList , broadcast=True, include_self=True)
 
 @socketio.on('logout')
