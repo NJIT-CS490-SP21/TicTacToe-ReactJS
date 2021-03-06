@@ -90,7 +90,7 @@ def on_login( data ):
     userList.append(data)
     socketio.emit('login', userList , broadcast=True, include_self=True)
     
-    leaderboard = Player.query.all()
+    leaderboard = Player.query.order_by(Player.score.desc()).all()
     print("\n\nFirst:",leaderboard)
 
     players = []
@@ -107,7 +107,7 @@ def on_login( data ):
         db.session.add(player)
         db.session.commit()
     
-    leaderboard = Player.query.all()
+    leaderboard = Player.query.order_by(Player.score.desc()).all()
     print("\n\nSecond:",leaderboard)
     players = []
     for player in leaderboard:
@@ -132,16 +132,21 @@ def on_logout( data ):
     userList.remove(data)
     socketio.emit('logout', userList, broadcast=True, include_self=True)
     
-# Note that we don't call app.run anymore. We call socketio.run with app arg
-socketio.run(
-    app,
-    host=os.getenv('IP', '0.0.0.0'),
-    port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
-)
 
 @socketio.on('match')
 def on_match( data ): # data will be 'X','O',or 'S'.  Will only be sent by 'X'
-    if data == 'X':
+    print("\nWho won?  ", data,"\n")
+    win = data[0]
+    username = data[1]
+    
+    leaderboard = Player.query.order_by(Player.score.desc()).all()
+    players = []
+    for player in leaderboard:
+        players.append( [player.username, player.score] )
+    print("Before Update Players:", players)
+    
+    
+    if win == 'X':
         # add 1 to 'X', subtract 1 from 'O'
         winner = Player.query.filter_by(username=userList[0]).first()
         winner.score = winner.score + 1
@@ -149,7 +154,8 @@ def on_match( data ): # data will be 'X','O',or 'S'.  Will only be sent by 'X'
         loser = Player.query.filter_by(username=userList[1]).first()
         loser.score = loser.score - 1
         db.session.commit()
-    elif data == 'O':
+        
+    elif win == 'O':
         # subtract 1 from 'X', add 1 to 'O'
         winner = Player.query.filter_by(username=userList[1]).first()
         winner.score = winner.score + 1
@@ -158,16 +164,16 @@ def on_match( data ): # data will be 'X','O',or 'S'.  Will only be sent by 'X'
         loser.score = loser.score - 1
         db.session.commit()
         
-    elif data == 'Tie':
+    elif win == 'Tie':
         # do nothing
         print(data)
     
     
-    leaderboard = Player.query.all()
-    print("\n\nSecond:", leaderboard)
+    leaderboard = Player.query.order_by(Player.score.desc()).all()
     players = []
     for player in leaderboard:
         players.append( [player.username, player.score] )
+    print("After Updata Players:", players)
     
     socketio.emit('leaderboard', players, broadcast=True, include_self=True)
     

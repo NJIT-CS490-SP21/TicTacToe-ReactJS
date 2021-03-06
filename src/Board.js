@@ -23,11 +23,26 @@ export function Board(props){
         }
         
         const [winner, winning_spots] = calculateWinner();
+        const tie = calculateTie();
+        
         if (board[index] || winner !=  null){
             return;
         }
         const boardCopy = board.slice();
         boardCopy[index] = getValue(user)
+        
+        let [mw, moves] = moveWinner(boardCopy)
+        let tie2 = moveTie(boardCopy)
+        
+        if (mw){
+            console.log("Sending WINNER match emit", board)
+            socket.emit('match', [mw, props.perm]);
+            
+        } else if (tie2){
+            console.log("Sending TIE match emit", board)
+            socket.emit('match', ['Tie', props.perm]);
+        
+        }
         
         changeUser(user)
         setBoard(boardCopy);
@@ -79,6 +94,28 @@ export function Board(props){
         return [null, null];
     }
     
+    function moveWinner(boardCopy) {
+        const winning_moves = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        
+        for (let i = 0; i < winning_moves.length; i++) {
+            const [a, b, c] = winning_moves[i];
+            if (boardCopy[a] && boardCopy[a] === boardCopy[b] && boardCopy[a] === boardCopy[c]) {
+                return [ boardCopy[a], winning_moves[i] ];
+            }
+        }
+        
+        return [null, null];
+    }
+    
     function calculateTie() {
         const [winner, moves] = calculateWinner();
         if (!board.includes(null) && winner == null){
@@ -87,9 +124,17 @@ export function Board(props){
         return false;
     }
     
+    function moveTie(boardCopy) {
+        const [winner, moves] = moveWinner(boardCopy);
+        if (!boardCopy.includes(null) && winner == null){
+            return true;
+        }
+        return false;
+    }
+    
     function onClickPlayAgain(){
-        setBoard( Array(9).fill(null) )
-        setUser( 1 )
+        setBoard( Array(9).fill(null) );
+        setUser( 1 );
         socket.emit('reset', );
     }
     
@@ -116,18 +161,21 @@ export function Board(props){
     const tie = calculateTie();
     
     // UPDATE STATUS
+    // SEND MATCH EMIT  
+        if (winner) {
+            
+        }
+        if (tie){
+            
+        }
+    
+    
+    console.log("Update status")
     let status;
     if (winner) {
         status = 'Winner: ' + winner;
-        if (props.perm == 'X'){
-            socket.emit('match', winner);
-        }
-            
     } else if(tie){
-        status = "Tie!!"
-        if (props.perm == 'X'){
-            socket.emit('match', 'Tie');
-        }
+        status = "Tie!!";
     } else{
         status = 'Next player: ' + getValue(user);
     }

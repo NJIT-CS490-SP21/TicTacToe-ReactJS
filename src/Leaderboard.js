@@ -1,18 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Table } from './Table.js';
 import io from 'socket.io-client';
-
+import './Leaderboard.css';
 export function Leaderboard(props) {
     const socket = props.socket;
     
     // LEADERBOARD
-    const [boolLeaders, setBoolLeaders] = useState(true)
-    const [leaders, setLeaders] = useState(null);
+    const [boolLeaders, setBoolLeaders] = useState(false);
+    const [leaders, setLeaders] = useState([]);
     
     function onClickLeaderboardButton() {
         if (boolLeaders == true) {
-            setBoolLeaders(false)
+            setBoolLeaders(false);
         } else if (boolLeaders == false) {
-            setBoolLeaders(true)
+            setBoolLeaders(true);
         }
     }
     
@@ -30,18 +31,17 @@ export function Leaderboard(props) {
     if (boolLeaders) {
         return (
             <div>
-                'Leaderboard:'
-                hahahahahahah
-                { leaders }
-                
+                <leaderHeader> Leaderboard:</leaderHeader>
                 <button class='LeaderboardButton' onClick={onClickLeaderboardButton}>Hide</button>
+                
+                <Table leaders={ leaders } user={props.user}/>
             </div>
             
         );
     } else if (!boolLeaders){
         return (
             <div>
-                'Leaderboard:'
+                <leaderHeader>Leaderboard:</leaderHeader>
                 <button class='LeaderboardButton' onClick={onClickLeaderboardButton}>Show</button>
             </div>
         );

@@ -99,12 +99,6 @@ export function Login(props) {
                     <button class='button' onClick={onClickLogin}>Login</button>
                     <p3> { usernameError } </p3>
                 </div>
-                
-                <div>
-                    <Leaderboard socket={socket} />
-                </div>
-                
-                
             </div>
         );
     }
@@ -130,6 +124,11 @@ export function Login(props) {
                         {users.map((item, index) => <ListItem key={index} name={item} />)}
                     </ul>
                 </div>
+                
+                <div>
+                    <Leaderboard socket={socket} user={username}/>
+                </div>
+                
                 
             </div>
         );
