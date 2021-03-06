@@ -103,7 +103,7 @@ def on_login( data ):
     
     # update leaderboard
     if appendUser:
-        player = Player(username=data, score=0)
+        player = Player(username=data, score=100)
         db.session.add(player)
         db.session.commit()
     
@@ -115,7 +115,7 @@ def on_login( data ):
         
     print("Players:", players)
     
-    socketio.emit('leaderboard', leaderboard, broadcast=True, include_self=True)
+    socketio.emit('leaderboard', players, broadcast=True, include_self=True)
     
 
 @socketio.on('logout')
@@ -131,6 +131,34 @@ def on_logout( data ):
     print(userList)
     userList.remove(data)
     socketio.emit('logout', userList, broadcast=True, include_self=True)
+    
+# Note that we don't call app.run anymore. We call socketio.run with app arg
+socketio.run(
+    app,
+    host=os.getenv('IP', '0.0.0.0'),
+    port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
+)
+
+@socketio.on('match')
+def on_match( data ): # data will be 'X','O',or 'S'.  Will only be sent by 'X'
+    if data == 'X':
+        # add 1 to 'X', subtract 1 from 'O'
+        print(data)
+    elif data == 'O':
+        # subtract 1 from 'X', add 1 to 'O'
+        print(data)
+    elif data == 'Tie':
+        # do nothing
+        print(data)
+    
+    
+    leaderboard = Player.query.all()
+    print("\n\nSecond:", leaderboard)
+    players = []
+    for player in leaderboard:
+        players.append( [player.username, player.score] )
+    
+    socketio.emit('leaderboard', players, broadcast=True, include_self=True)
     
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(

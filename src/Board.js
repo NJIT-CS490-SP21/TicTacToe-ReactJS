@@ -119,8 +119,15 @@ export function Board(props){
     let status;
     if (winner) {
         status = 'Winner: ' + winner;
+        if (props.perm == 'X'){
+            socket.emit('match', winner);
+        }
+            
     } else if(tie){
         status = "Tie!!"
+        if (props.perm == 'X'){
+            socket.emit('match', 'Tie');
+        }
     } else{
         status = 'Next player: ' + getValue(user);
     }
