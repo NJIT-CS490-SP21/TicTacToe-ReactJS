@@ -209,4 +209,4 @@ export function Board(props){
     //     const boardCopy = board.slice();
     //     setBoard(boardCopy);
     //     socket.emit('board', { board: boardCopy });
-    // }
+    // } 

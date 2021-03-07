@@ -29,4 +29,4 @@ export function Table(props) {
     
     return(<tableBody>{result}</tableBody>);
     
-}
+} 

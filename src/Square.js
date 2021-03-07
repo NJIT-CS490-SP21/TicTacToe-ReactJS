@@ -15,4 +15,4 @@ export function Square(props){
             { props.value } 
         </div>    
     );
-}
+} 
