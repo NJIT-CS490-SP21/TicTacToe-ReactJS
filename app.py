@@ -1,4 +1,4 @@
-import os
+import os 
 from flask import Flask, send_from_directory, json, session
 from flask_socketio import SocketIO
 from flask_cors import CORS
@@ -11,7 +11,7 @@ load_dotenv(find_dotenv())
 app = Flask(__name__, static_folder='./build/static')
 
 # Point SQLAlchemy to your Heroku database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATAB_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 # Gets rid of a warning
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

@@ -1,4 +1,4 @@
-# Flask and create-react-app
+# Flask and create-react-app (TicTacToe) - Joseph Stapleton
 
 ## Requirements
 1. `npm install`
@@ -45,26 +45,25 @@ c) `\q` to quit out of sql
 >> from app import db
 >> import models
 >> db.create_all()
->> admin = models.Person(username='admin', email='admin@example.com')
->> guest = models.Person(username='guest', email='guest@example.com')
+>> Player = models.getPlayerClass(db)
+>> admin = Player(username='admin', score=100)
+>> guest = Player(username='guest', score=100)
 >> db.session.add(admin)
 >> db.session.add(guest)
 >> db.session.commit()
 ```
 4. In your same `python` session, let's now make sure that data was added successfully by doing some queries.
 ```
->> models.Person.query.all()
-[<Person u'admin'>, <Person u'guest'>] # output
->> models.Person.query.filter_by(username='admin').first()
-<Person u'admin'> # output
+>> Player.query.all()
+[<Player u'admin'>, <Player u'guest'>] # output
+>> Player.query.filter_by(username='admin').first()
+<Player u'admin'> # output
 ```
 5. Now let's make sure this was written to our Heroku remote database! Let's connect to it using: `heroku pg:psql`
 6. `\d` to list all our tables. `person` should be in there now.
 7. Now let's query the data with a SQL query to check if it works:
 `SELECT * FROM person;`
 `SELECT email FROM person WHERE username='admin';`
-
-
 ## Run Application
 1. Run command in terminal (in your project directory): `python app.py`
 2. Run command in another terminal, `cd` into the project directory, and run `npm run start`
