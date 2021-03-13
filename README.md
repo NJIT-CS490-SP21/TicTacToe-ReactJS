@@ -73,6 +73,7 @@ c) `\q` to quit out of sql
 1. Create a Heroku app: `heroku create --buildpack heroku/python`
 2. Add nodejs buildpack: `heroku buildpacks:add --index 1 heroku/nodejs`
 3. Push to Heroku: `git push heroku main`
+<<<<<<< HEAD
 
 ## Problems/Future Addons
 
@@ -95,3 +96,6 @@ c) `\q` to quit out of sql
 2. I was also having an issue with emitting my outcome of the match.  My thought proccess was to have Player 'X' be the only one to send the emits, but when I emitted I was also recieving an emit, so it would update the page and re-emit again.  This would also re-emit the outcome for every emit to the page that doesn't reset the board. 
 
     I fixed this by changing the code to emit the outcome on clicking a square.  I then had to change my code again because my emits were only emitted by Player 'X'.  So I made it so the winner would emit the outcome.  I also had to make special functions to calculate if that specific move lead to a win/tie and then if so, emit.
+=======
+# project2-jrs95
+>>>>>>> 3805579c5f2ab39ce78df5180d8a0595d85bae4c
