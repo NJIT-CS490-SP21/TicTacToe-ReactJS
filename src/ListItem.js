@@ -1,5 +1,14 @@
-import React from "react";
+import React from 'react';
 
-export function ListItem(props) {
-  return <li> {props.name} </li>;
+function ListItem(props) {
+  const name = props;
+  return (
+    <li>
+      {' '}
+      {name}
+      {' '}
+    </li>
+  );
 }
+
+export default ListItem;

@@ -1,8 +1,17 @@
-def getPerson(db):
-    class Person(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(80), unique=True, nullable=False)
-        email = db.Column(db.String(120), unique=True, nullable=False)
+''' create objects for database to hold leaderboard information '''
+
+
+def get_person(database):
+    ''' return class Person for a database'''
+    class Person(database.Model):
+        ''' create class Person and set up output'''
+        id = database.Column(database.Integer, primary_key=True)
+        username = database.Column(database.String(80),
+                                   unique=True,
+                                   nullable=False)
+        email = database.Column(database.String(120),
+                                unique=True,
+                                nullable=False)
 
         def __repr__(self):
             return '<Person %r>' % self.username
@@ -10,18 +19,17 @@ def getPerson(db):
     return Person
 
 
-def getPlayerClass(db):
-    class Player(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(80), unique=True, nullable=False)
-        score = db.Column(db.Integer, unique=False, nullable=False)
+def get_player_class(database):
+    ''' return class Player for a database'''
+    class Player(database.Model):
+        ''' create class Player and set up output'''
+        id = database.Column(database.Integer, primary_key=True)
+        username = database.Column(database.String(80),
+                                   unique=True,
+                                   nullable=False)
+        score = database.Column(database.Integer, unique=False, nullable=False)
 
         def __repr__(self):
             return '<Player %r>' % self.username
 
     return Player
-
-
-def hello_world():
-    print("Hello world")
-    return True

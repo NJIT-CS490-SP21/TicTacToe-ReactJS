@@ -1,85 +1,85 @@
-import { useState, useRef, useEffect } from "react";
-import io from "socket.io-client";
-import logo from "./logo.svg";
+import React, { useState, useRef, useEffect } from 'react';
 
-import { Chat } from "./Chat.js";
-import { Board } from "./Board.js";
-import { ListItem } from "./ListItem.js";
-import { Leaderboard } from "./Leaderboard.js";
+import logo from './logo.svg';
 
-import "./Login.css";
+import Chat from './Chat';
+import Board from './Board';
+import ListItem from './ListItem';
+import Leaderboard from './Leaderboard';
 
-export function Login(props) {
-  const socket = props.socket;
+import './Login.css';
+
+function Login(props) {
+  const { socket } = props;
   const [login, setLogin] = useState(false);
-  const [usernameError, setError] = useState("");
+  const [usernameError, setError] = useState('');
 
   const [users, setUsers] = useState([]);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
   const [permission, setPermission] = useState(null);
 
   const inputRef = useRef(null);
 
   function onClickLogin() {
-    if (inputRef == null || inputRef.current.value == "") {
-      setError("You must enter a username");
+    if (inputRef === null || inputRef.current.value === '') {
+      setError('You must enter a username');
       return;
     }
     const input = inputRef.current.value;
     setUsername(input);
 
     setUsers((prev) => [...prev, input]);
-    socket.emit("login", input);
+    socket.emit('login', input);
     setLogin(true);
   }
 
   function onClickLogout() {
     setLogin(false);
-    setError("");
+    setError('');
 
-    //remove username from userList
-    let usersCopy = users.splice();
-    let index = users.indexOf(username);
+    // remove username from userList
+    const usersCopy = users.splice();
+    const index = users.indexOf(username);
     usersCopy.splice(index, 1);
     setUsers(usersCopy);
 
-    socket.emit("logout", username);
+    socket.emit('logout', username);
   }
 
   // LOGIN AND LOGOUT
   useEffect(() => {
-    socket.on("login", (data) => {
-      console.log("login event received!");
-      console.log(data);
+    socket.on('login', (data) => {
+      // console.log('login event received!');
+      // console.log(data);
       setUsers(data);
-      console.log("Username is: ", username);
+      // console.log('Username is: ', username);
 
-      if (data[0] == username) {
-        console.log("Permissions set to X");
-        setPermission("X");
-      } else if (data[1] == username) {
-        console.log("Permissions set to O");
-        setPermission("O");
+      if (data[0] === username) {
+        // console.log('Permissions set to X');
+        setPermission('X');
+      } else if (data[1] === username) {
+        // console.log('Permissions set to O');
+        setPermission('O');
       } else {
-        console.log("Permissions set to S");
-        setPermission("S");
+        // console.log('Permissions set to S');
+        setPermission('S');
       }
     });
 
-    socket.on("logout", (data) => {
-      console.log("logout event received!");
-      console.log(data);
+    socket.on('logout', (data) => {
+      // console.log('logout event received!');
+      // console.log(data);
       setUsers(data);
 
-      if (data[0] == username) {
-        console.log("Permissions set to X");
-        setPermission("X");
-      } else if (data[1] == username) {
-        console.log("Permissions set to O");
-        setPermission("O");
+      if (data[0] === username) {
+        // console.log('Permissions set to X');
+        setPermission('X');
+      } else if (data[1] === username) {
+        // console.log('Permissions set to O');
+        setPermission('O');
       } else {
-        console.log("Permissions set to S");
-        setPermission("S");
+        // console.log('Permissions set to S');
+        setPermission('S');
       }
     });
   }, [username]);
@@ -88,45 +88,65 @@ export function Login(props) {
     return (
       <div className="login">
         <h1>
-          Login <img src={logo} className="App-logo" alt="logo" />{" "}
+          Login
+          {' '}
+          <img src={logo} className="App-logo" alt="logo" />
+          {' '}
         </h1>
         <p1>
-          {" "}
+          {' '}
           Please enter the username you are going to be using while in our
           server.
-        </p1>{" "}
+        </p1>
+        {' '}
         <br />
-        <div class="username">
+        <div className="username">
           <p2>
-            Username: <input class="loginInput" ref={inputRef} type="text" />{" "}
+            Username:
+            {' '}
+            <input className="loginInput" ref={inputRef} type="text" />
+            {' '}
           </p2>
-          <button class="button" onClick={onClickLogin}>
+          <button className="button" type="submit" onClick={onClickLogin}>
             Login
           </button>
-          <p3> {usernameError} </p3>
+          <p3>
+            {' '}
+            {usernameError}
+            {' '}
+          </p3>
         </div>
       </div>
     );
-  } else if (login) {
+  } if (login) {
     return (
-      <div class="screen">
+      <div className="screen">
         <div>
           <status>
-            Logged in as: {username} - Player Status: {permission} <br />{" "}
+            Logged in as:
+            {' '}
+            {username}
+            {' '}
+            - Player Status:
+            {' '}
+            {permission}
+            {' '}
+            <br />
+            {' '}
           </status>
-          <button class="button1" onClick={onClickLogout}>
+          <button className="button1" type="submit" onClick={onClickLogout}>
             Logout
           </button>
         </div>
 
-        <div class="board">
+        <div className="board">
           <Board socket={socket} perm={permission} />
         </div>
 
-        <div class="one">
+        <div className="one">
           <Chat socket={socket} />
         </div>
-        <div class="one">
+        <div className="one">
           <h3> List of logged users: </h3>
           <ul>
             {users.map((item, index) => (
@@ -142,3 +162,5 @@ export function Login(props) {
     );
   }
 }
+
+export default Login;

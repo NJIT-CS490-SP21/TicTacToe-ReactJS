@@ -1,117 +1,133 @@
+''' Server for a TicTacToe web application.
+
+Listens and sends emits to clients based on client actions.
+Holds lists of current users.
+Can access and update database of winners/losers to show leaderboard.
+'''
+
 import os
-from flask import Flask, send_from_directory, json, session
+from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
-app = Flask(__name__, static_folder='./build/static')
+APP = Flask(__name__, static_folder='./build/static')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATAB_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+APP.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATAB_URL')
+APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+DB = SQLAlchemy(APP)
 
 import models
 if __name__ == '__main__':
-    db.create_all()
+    DB.create_all()
 
-Player = models.getPlayerClass(db)
+Player = models.get_player_class(DB)
 
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
-socketio = SocketIO(app,
+CORS = CORS(APP, resources={r"/*": {"origins": "*"}})
+SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
                     manage_session=False)
 
-userList = []
+USERLIST = []
 
 
-@app.route('/', defaults={"filename": "index.html"})
-@app.route('/<path:filename>')
+@APP.route('/', defaults={"filename": "index.html"})
+@APP.route('/<path:filename>')
 def index(filename):
+    ''' creates the app '''
     return send_from_directory('./build', filename)
 
 
 # When a client connects from this Socket connection, this function is run
-@socketio.on('connect')
+@SOCKETIO.on('connect')
 def on_connect():
+    ''' When a user connects, run this function '''
     print('User connected!')
 
-    players = getLeaderboardAsArray()
-    socketio.emit('leaderboard', players)
+    players = get_leaderboard_as_array()
+    SOCKETIO.emit('leaderboard', players)
 
 
 # When a client disconnects from this Socket connection, this function is run
-@socketio.on('disconnect')
+@SOCKETIO.on('disconnect')
 def on_disconnect():
+    ''' When a user disconnects, run this function '''
     print('User disconnected!')
 
 
-@socketio.on('chat')
+@SOCKETIO.on('chat')
 def on_chat(data):
+    ''' When app receives a 'chat' event, run this function '''
     print(str(data))
-    socketio.emit('chat', data, broadcast=True, include_self=False)
+    SOCKETIO.emit('chat', data, broadcast=True, include_self=False)
 
 
-@socketio.on('board')
+@SOCKETIO.on('board')
 def on_board(data):
+    ''' When app receives a 'board' event, run this function '''
     print(data)
-    socketio.emit('board', data, broadcast=True, include_self=False)
+    SOCKETIO.emit('board', data, broadcast=True, include_self=False)
 
 
-@socketio.on('reset')
+@SOCKETIO.on('reset')
 def on_reset():
-    socketio.emit('reset', broadcast=True, include_self=False)
+    ''' When app receives a 'reset' event, run this function '''
+    SOCKETIO.emit('reset', broadcast=True, include_self=False)
 
 
-@socketio.on('login')
+@SOCKETIO.on('login')
 def on_login(data):
+    ''' When app receives a 'login' event, run this function '''
     print("Adding:", data)
-    userList.append(data)
-    socketio.emit('login', userList, broadcast=True, include_self=True)
+    USERLIST.append(data)
+    SOCKETIO.emit('login', USERLIST, broadcast=True, include_self=True)
 
     # append only if it does not exist within databasee
-    if Player.query.filter_by(username=data).first() == None:
+    if Player.query.filter_by(username=data).first() is None:
         player = Player(username=data, score=100)
-        db.session.add(player)
-        db.session.commit()
+        DB.session.add(player)
+        DB.session.commit()
 
     # grab leaderboard as an array
-    players = getLeaderboardAsArray()
+    players = get_leaderboard_as_array()
 
-    socketio.emit('leaderboard', players, broadcast=True, include_self=True)
+    SOCKETIO.emit('leaderboard', players, broadcast=True, include_self=True)
 
 
-@socketio.on('logout')
+@SOCKETIO.on('logout')
 def on_logout(data):
+    ''' When app receives a 'logout' event, run this function '''
     print("Removing", data)
 
     # swap player x with first player s if x is leaving
-    if (userList[0] == data and len(userList) > 2):
-        userList[0], userList[2] = userList[2], userList[0]
+    if (USERLIST[0] == data and len(USERLIST) > 2):
+        USERLIST[0], USERLIST[2] = USERLIST[2], USERLIST[0]
 
-    userList.remove(data)
-    socketio.emit('logout', userList, broadcast=True, include_self=True)
+    USERLIST.remove(data)
+    SOCKETIO.emit('logout', USERLIST, broadcast=True, include_self=True)
 
 
-@socketio.on('match')
+@SOCKETIO.on('match')
 def on_match(
         data):  # data will be 'X','O',or 'S'.  Will only be sent by winner
+    ''' When app receives a 'match' event, run this function '''
     win = data[0]
-    username = data[1]
 
     # Update Leaderboard, +1 winner -1 loser
-    updateLeaderboardScore(win)
+    update_leaderboard_score(win)
 
-    players = getLeaderboardAsArray()
+    players = get_leaderboard_as_array()
     print("After Updata Players:", players)
 
-    socketio.emit('leaderboard', players, broadcast=True, include_self=True)
+    SOCKETIO.emit('leaderboard', players, broadcast=True, include_self=True)
 
 
-def getLeaderboardAsArray():
+def get_leaderboard_as_array():
+    ''' Get the database and store data in an array '''
     leaderboard = Player.query.order_by(Player.score.desc()).all()
     players = []
     for player in leaderboard:
@@ -120,22 +136,23 @@ def getLeaderboardAsArray():
     return players
 
 
-def updateLeaderboardScore(win):
+def update_leaderboard_score(win):
+    ''' Update the database based upon the winner '''
     if win == 'X':  # add 1 to 'X', subtract 1 from 'O'
-        winner = Player.query.filter_by(username=userList[0]).first()
+        winner = Player.query.filter_by(username=USERLIST[0]).first()
         winner.score = winner.score + 1
 
-        loser = Player.query.filter_by(username=userList[1]).first()
+        loser = Player.query.filter_by(username=USERLIST[1]).first()
         loser.score = loser.score - 1
-        db.session.commit()
+        DB.session.commit()
 
     elif win == 'O':  # subtract 1 from 'X', add 1 to 'O'
-        winner = Player.query.filter_by(username=userList[1]).first()
+        winner = Player.query.filter_by(username=USERLIST[1]).first()
         winner.score = winner.score + 1
 
-        loser = Player.query.filter_by(username=userList[0]).first()
+        loser = Player.query.filter_by(username=USERLIST[0]).first()
         loser.score = loser.score - 1
-        db.session.commit()
+        DB.session.commit()
 
     elif win == 'Tie':
         # do nothing
@@ -143,8 +160,8 @@ def updateLeaderboardScore(win):
 
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
-socketio.run(
-    app,
+SOCKETIO.run(
+    APP,
     host=os.getenv('IP', '0.0.0.0'),
     port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
 )

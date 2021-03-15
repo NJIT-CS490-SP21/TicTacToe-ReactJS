@@ -1,26 +1,27 @@
-import { useState, useEffect } from "react";
-import { Table } from "./Table.js";
-import io from "socket.io-client";
-import "./Leaderboard.css";
-export function Leaderboard(props) {
-  const socket = props.socket;
+import React, { useState, useEffect } from 'react';
+
+import Table from './Table';
+import './Leaderboard.css';
+
+function Leaderboard(props) {
+  const socket = props;
 
   // LEADERBOARD
   const [boolLeaders, setBoolLeaders] = useState(false);
   const [leaders, setLeaders] = useState([]);
 
   function onClickLeaderboardButton() {
-    if (boolLeaders == true) {
+    if (boolLeaders === true) {
       setBoolLeaders(false);
-    } else if (boolLeaders == false) {
+    } else if (boolLeaders === false) {
       setBoolLeaders(true);
     }
   }
 
   useEffect(() => {
-    socket.on("leaderboard", (data) => {
-      console.log("leaderboard event received!");
-      console.log(data);
+    socket.on('leaderboard', (data) => {
+      // console.log('leaderboard event received!');
+      // console.log(data);
 
       setLeaders(data);
     });
@@ -30,21 +31,23 @@ export function Leaderboard(props) {
     return (
       <div>
         <leaderHeader> Leaderboard:</leaderHeader>
-        <button class="LeaderboardButton" onClick={onClickLeaderboardButton}>
+        <button type="submit" className="LeaderboardButton" onClick={onClickLeaderboardButton}>
           Hide
         </button>
 
         <Table leaders={leaders} user={props.user} />
       </div>
     );
-  } else if (!boolLeaders) {
+  } if (!boolLeaders) {
     return (
       <div>
         <leaderHeader>Leaderboard:</leaderHeader>
-        <button class="LeaderboardButton" onClick={onClickLeaderboardButton}>
+        <button type="submit" className="LeaderboardButton" onClick={onClickLeaderboardButton}>
           Show
         </button>
       </div>
     );
   }
 }
+
+export default Leaderboard;

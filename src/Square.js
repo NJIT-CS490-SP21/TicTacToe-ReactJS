@@ -1,16 +1,23 @@
-import { useState } from "react";
-import "./Square.css";
-export function Square(props) {
-  const [square, setSquare] = useState("");
+import React, { useState } from 'react';
+
+import './Square.css';
+
+function Square(props) {
+  const [square, setSquare] = useState('');
+  const onClick = props.onClick();
+  const { index } = props;
+  const { value } = props;
 
   function onClickBox() {
-    props.onClick(props.index);
-    setSquare(props.value);
+    onClick(index);
+    setSquare(value);
   }
 
   return (
-    <div class="box" onClick={onClickBox}>
-      {props.value}
+    <div className="box" onClick={() => onClickBox()}>
+      {square}
     </div>
   );
 }
+
+export default Square;

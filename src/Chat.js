@@ -1,11 +1,10 @@
-import { ListItem } from "./ListItem.js";
-import { useState, useRef, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useState, useRef, useEffect } from 'react';
+import ListItem from './ListItem';
 
-import "./Chat.css";
+import './Chat.css';
 
-export function Chat(props) {
-  const socket = props.socket;
+function Chat(props) {
+  const { socket } = props;
   const [messages, setMessages] = useState([]); // State variable, list of messages
   const inputRef = useRef(null); // Reference to <input> element
 
@@ -15,7 +14,7 @@ export function Chat(props) {
       // If your own client sends a message, we add it to the list of messages to
       // render it on the UI.
       setMessages((prevMessages) => [...prevMessages, message]);
-      socket.emit("chat", { message: message });
+      socket.emit('chat', { message });
     }
   }
 
@@ -25,9 +24,10 @@ export function Chat(props) {
   useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg
-    socket.on("chat", (data) => {
-      console.log("Chat event received!");
-      console.log(data);
+    socket.on('chat', (data) => {
+      // console.log('Chat event received!');
+      // console.log(data);
+
       // If the server sends a message (on behalf of another client), then we
       // add it to the list of messages to render it on the UI.
       setMessages((prevMessages) => [...prevMessages, data.message]);
@@ -35,13 +35,18 @@ export function Chat(props) {
   }, []);
 
   return (
-    <div class="chat">
-      <message>Chat:</message> <br />
+    <div className="chat">
+      <message>Chat:</message>
+      {' '}
+      <br />
       <enterMessage>
-        {" "}
-        Enter message here: <input ref={inputRef} type="text" />{" "}
+        {' '}
+        Enter message here:
+        {' '}
+        <input ref={inputRef} type="text" />
+        {' '}
       </enterMessage>
-      <button onClick={onClickButton}>Send</button>
+      <button type="submit" onClick={onClickButton}>Send</button>
       <ul>
         {messages.map((item, index) => (
           <ListItem key={index} name={item} />
@@ -50,3 +55,5 @@ export function Chat(props) {
     </div>
   );
 }
+
+export default Chat;

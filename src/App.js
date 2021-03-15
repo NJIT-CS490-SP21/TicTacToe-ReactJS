@@ -1,8 +1,7 @@
-import "./App.css";
-import { Login } from "./Login.js";
-
-import { useState, useRef, useEffect } from "react";
-import io from "socket.io-client";
+import React from 'react';
+import io from 'socket.io-client';
+import Login from './Login';
+import './App.css';
 
 const socket = io(); // Connects to socket connection
 
