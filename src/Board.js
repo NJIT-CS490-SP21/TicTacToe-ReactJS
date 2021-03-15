@@ -23,28 +23,27 @@ export function Board(props){
         }
         
         const [winner, winning_spots] = calculateWinner();
-        const tie = calculateTie();
         
         if (board[index] || winner !=  null){
             return;
         }
         const boardCopy = board.slice();
-        boardCopy[index] = getValue(user)
+        boardCopy[index] = getValue(user);
         
-        let [mw, moves] = moveWinner(boardCopy)
-        let tie2 = moveTie(boardCopy)
+        let [mw, moves] = moveWinner(boardCopy);
+        let tie2 = moveTie(boardCopy);
         
         if (mw){
-            console.log("Sending WINNER match emit", board)
+            console.log("Sending WINNER match emit", board);
             socket.emit('match', [mw, props.perm]);
             
         } else if (tie2){
-            console.log("Sending TIE match emit", board)
+            console.log("Sending TIE match emit", board);
             socket.emit('match', ['Tie', props.perm]);
         
         }
         
-        changeUser(user)
+        changeUser(user);
         setBoard(boardCopy);
         
         const userCopy = user;
@@ -65,10 +64,10 @@ export function Board(props){
     
     function changeUser(usr){
         if (usr == 1){      
-            setUser( 2 ) 
+            setUser( 2 ) ;
         }
         else if (usr == 2){ 
-            setUser( 1 ) 
+            setUser( 1 ) ;
         }
     }
     
@@ -146,13 +145,13 @@ export function Board(props){
             index = index + 1;
             
             setBoard( data.board );
-            changeUser(data.user)
+            changeUser(data.user);
         });
         
         socket.on('reset', () => {
-            console.log('Reset event received!')
-            setBoard( Array(9).fill(null) )
-            setUser( 1 )
+            console.log('Reset event received!');
+            setBoard( Array(9).fill(null) );
+            setUser( 1 );
         });
         
     }, []);
@@ -193,20 +192,3 @@ export function Board(props){
         </div>
     );
 }
-
-
-
-
-    
-    // When clicked change user to next person
-    // function onBoardClick(){
-    //     if(user == 1){
-    //         setUser(2);
-    //     }
-    //     else{
-    //         setUser(1);
-    //     }
-    //     const boardCopy = board.slice();
-    //     setBoard(boardCopy);
-    //     socket.emit('board', { board: boardCopy });
-    // }  
