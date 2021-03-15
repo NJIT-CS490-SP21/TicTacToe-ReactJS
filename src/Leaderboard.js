@@ -4,7 +4,7 @@ import Table from './Table';
 import './Leaderboard.css';
 
 function Leaderboard(props) {
-  const socket = props;
+  const { socket, user } = props;
 
   // LEADERBOARD
   const [boolLeaders, setBoolLeaders] = useState(false);
@@ -35,7 +35,7 @@ function Leaderboard(props) {
           Hide
         </button>
 
-        <Table leaders={leaders} user={props.user} />
+        <Table leaders={leaders} user={user} />
       </div>
     );
   } if (!boolLeaders) {

@@ -1,9 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Table.css';
 
 function Table(props) {
-  const { leaders } = props;
-  const { user } = props;
+  const { leaders, user } = props;
 
   const result = [];
   let i;
@@ -29,5 +29,15 @@ function Table(props) {
 
   return <tableBody>{result}</tableBody>;
 }
+
+Table.propTypes = {
+  leaders: PropTypes.arrayOf(String),
+  user: PropTypes.string,
+};
+
+Table.defaultProps = {
+  leaders: [],
+  user: '',
+};
 
 export default Table;

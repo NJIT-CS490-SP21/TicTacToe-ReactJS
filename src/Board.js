@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 import './Board.css';
 
 import Square from './Square';
 
 function Board(props) {
-  const { socket } = props;
-  const { perm } = props;
+  const { socket, perm } = props;
+  const p = perm;
+  const sock = socket;
   const [board, setBoard] = useState(Array(9).fill(null));
   const [user, setUser] = useState(1);
 
@@ -91,11 +94,11 @@ function Board(props) {
   }
 
   function onClickSquare(idx) {
-    if (perm === 'S') {
+    if (p === 'S') {
       return;
     }
 
-    if (perm !== getValue(user)) {
+    if (p !== getValue(user)) {
       return;
     }
 
@@ -112,17 +115,17 @@ function Board(props) {
 
     if (mw) {
       // console.log('Sending WINNER match emit', board);
-      socket.emit('match', [mw, perm]);
+      sock.emit('match', [mw, perm]);
     } else if (tie2) {
       // console.log('Sending TIE match emit', board);
-      socket.emit('match', ['Tie', perm]);
+      sock.emit('match', ['Tie', perm]);
     }
 
     changeUser(user);
     setBoard(boardCopy);
 
     const userCopy = user;
-    socket.emit('board', { board: boardCopy, user: userCopy });
+    sock.emit('board', { board: boardCopy, user: userCopy });
   }
 
   function renderSquare(i) {
@@ -134,11 +137,11 @@ function Board(props) {
   function onClickPlayAgain() {
     setBoard(Array(9).fill(null));
     setUser(1);
-    socket.emit('reset');
+    sock.emit('reset');
   }
 
   useEffect(() => {
-    socket.on('board', (data) => {
+    sock.on('board', (data) => {
       // console.log('Board event received!');
       // console.log(data);
 
@@ -146,7 +149,7 @@ function Board(props) {
       changeUser(data.user);
     });
 
-    socket.on('reset', () => {
+    sock.on('reset', () => {
       // console.log('Reset event received!');
       setBoard(Array(9).fill(null));
       setUser(1);
@@ -191,5 +194,15 @@ function Board(props) {
     </div>
   );
 }
+
+Board.propTypes = {
+  socket: PropTypes.instanceOf(io()),
+  perm: PropTypes.string,
+};
+
+Board.defaultProps = {
+  socket: io(),
+  perm: 'S',
+};
 
 export default Board;

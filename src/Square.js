@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import './Square.css';
 
 function Square(props) {
   const [square, setSquare] = useState('');
-  const onClick = props.onClick();
-  const { index } = props;
-  const { value } = props;
+  const { onClick, index, value } = props;
 
   function onClickBox() {
     onClick(index);
@@ -14,10 +13,24 @@ function Square(props) {
   }
 
   return (
-    <div className="box" onClick={() => onClickBox()}>
+    <button type="submit" className="box" onClick={() => onClickBox()}>
       {square}
-    </div>
+    </button>
   );
 }
+
+function doNothing() { }
+
+Square.propTypes = {
+  onClick: PropTypes.func,
+  index: PropTypes.number,
+  value: PropTypes.string,
+};
+
+Square.defaultProps = {
+  onClick: doNothing(),
+  index: 0,
+  value: '',
+};
 
 export default Square;

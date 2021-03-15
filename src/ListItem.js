@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function ListItem(props) {
-  const name = props;
+  const { name } = props;
   return (
     <li>
       {' '}
@@ -10,5 +11,13 @@ function ListItem(props) {
     </li>
   );
 }
+
+ListItem.propTypes = {
+  name: PropTypes.string,
+};
+
+ListItem.defaultProps = {
+  name: '',
+};
 
 export default ListItem;

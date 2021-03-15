@@ -149,8 +149,8 @@ function Login(props) {
         <div className="one">
           <h3> List of logged users: </h3>
           <ul>
-            {users.map((item, index) => (
-              <ListItem key={index} name={item} />
+            {users.map((item) => (
+              <ListItem name={item} />
             ))}
           </ul>
         </div>

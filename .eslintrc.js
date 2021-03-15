@@ -19,7 +19,8 @@ module.exports = {
   ],
   ignorePatterns: [
     'setupTests.js', 
-    'reportWebVitals.js'
+    'reportWebVitals.js',
+    'App.test.js',
   ],
   rules: {
     'react/no-array-index-key': 0,

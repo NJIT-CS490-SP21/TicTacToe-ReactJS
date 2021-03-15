@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 import ListItem from './ListItem';
-
 import './Chat.css';
 
 function Chat(props) {
@@ -48,12 +49,20 @@ function Chat(props) {
       </enterMessage>
       <button type="submit" onClick={onClickButton}>Send</button>
       <ul>
-        {messages.map((item, index) => (
-          <ListItem key={index} name={item} />
+        {messages.map((item) => (
+          <ListItem name={item} />
         ))}
       </ul>
     </div>
   );
 }
+
+Chat.propTypes = {
+  socket: PropTypes.instanceOf(io()),
+};
+
+Chat.defaultProps = {
+  socket: null,
+};
 
 export default Chat;
