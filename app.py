@@ -83,7 +83,8 @@ def on_reset():
 def on_login(data):
     ''' When app receives a 'login' event, run this function '''
     print("Adding:", data)
-    add_user_to_userlist(data, USERLIST)
+    global USERLIST
+    USERLIST = add_user_to_userlist(data, USERLIST)
     SOCKETIO.emit('login', USERLIST, broadcast=True, include_self=True)
 
     # append only if it does not exist within databasee
@@ -95,11 +96,11 @@ def on_login(data):
 
     SOCKETIO.emit('leaderboard', players, broadcast=True, include_self=True)
 
-def add_user_to_userlist(data, USERLIST):
+def add_user_to_userlist(data, user_list_copy):
     ''' adds username to logged in userlists '''
-    USERLIST.append(data)
-    return USERLIST
-    
+    user_list_copy.append(data)
+    return user_list_copy
+
 def add_user_to_database(data):
     ''' Add user to database if it doesn't already exist within the database '''
     player = Player(username=data, score=100)
@@ -110,17 +111,18 @@ def add_user_to_database(data):
 def on_logout(data):
     ''' When app receives a 'logout' event, run this function '''
     print("Removing", data)
-
+    global USERLIST
     # swap player x with first player s if x is leaving
-    remove_user_from_userlist(data, USERLIST)
+    USERLIST = remove_user_from_userlist(data, USERLIST)
     SOCKETIO.emit('logout', USERLIST, broadcast=True, include_self=True)
-    
-def remove_user_from_userlist(data, USERLIST):
-    if (USERLIST[0] == data and len(USERLIST) > 2):
-        USERLIST[0], USERLIST[2] = USERLIST[2], USERLIST[0]
 
-    USERLIST.remove(data)
-    return USERLIST
+def remove_user_from_userlist(data, user_list_copy):
+    ''' Remove user from database, if removing pos 0, switch pos 1 and 3 '''
+    if (user_list_copy[0] == data and len(user_list_copy) > 2):
+        user_list_copy[0], user_list_copy[2] = user_list_copy[2], user_list_copy[0]
+
+    user_list_copy.remove(data)
+    return user_list_copy
 
 @SOCKETIO.on('match')
 def on_match(
@@ -150,31 +152,31 @@ def get_leaderboard_as_array():
 def update_leaderboard_score(win):
     ''' Update the database based upon the winner '''
     if win == 'X':  # add 1 to 'X', subtract 1 from 'O'
-        winnerIncrement(0)
-        loserDecrement(1)
-        
+        winner_increment(0)
+        loser_decrement(1)
+
         DB.session.commit()
 
     elif win == 'O':  # subtract 1 from 'X', add 1 to 'O'
-        winnerIncrement(1)
-        loserDecrement(0)
-        
+        winner_increment(1)
+        loser_decrement(0)
+
         DB.session.commit()
 
     elif win == 'Tie':
         # do nothing
         pass
 
-def winnerIncrement(index):
+def winner_increment(indx):
     ''' increment winner in database based on userlist index'''
-    winner =  Player.query.filter_by(username=USERLIST[index]).first()
+    winner = Player.query.filter_by(username=USERLIST[indx]).first()
     winner.score = winner.score + 1
-    
-def loserDecrement(index):
+
+def loser_decrement(indx):
     ''' decrement loser in database based on userlist index '''
-    loser =  Player.query.filter_by(username=USERLIST[index]).first()
+    loser = Player.query.filter_by(username=USERLIST[indx]).first()
     loser.score = loser.score - 1
-    
+
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 SOCKETIO.run(
     APP,

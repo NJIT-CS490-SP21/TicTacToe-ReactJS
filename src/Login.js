@@ -110,11 +110,11 @@ function Login(props) {
           <button className="button" type="submit" onClick={onClickLogin}>
             Login
           </button>
-          <P3>
+          <p3>
             {' '}
             {usernameError}
             {' '}
-          </P3>
+          </p3>
         </div>
       </div>
     );

@@ -113,8 +113,8 @@ class UpdateScoreTestCase(unittest.TestCase):
             # print(INITIAL_LEADERBOARD)
             
             print('Start of test:')
-            with patch('app.winnerIncrement', self.mocked_winner_increment):
-                with patch('app.loserDecrement', self.mocked_loser_decrement):
+            with patch('app.winner_increment', self.mocked_winner_increment):
+                with patch('app.loser_decrement', self.mocked_loser_decrement):
                     with patch('app.DB.session.commit', self.mocked_db_session_commit):
                         
                         update_leaderboard_score(test[KEY_INPUT]) # INPUT: 'X','O', or 'Tie'
