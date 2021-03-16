@@ -112,10 +112,10 @@ def on_logout(data):
     print("Removing", data)
 
     # swap player x with first player s if x is leaving
-    remove_data_from_userlist(data, USERLIST)
+    remove_user_from_userlist(data, USERLIST)
     SOCKETIO.emit('logout', USERLIST, broadcast=True, include_self=True)
     
-def remove_data_from_userlist(data, USERLIST):
+def remove_user_from_userlist(data, USERLIST):
     if (USERLIST[0] == data and len(USERLIST) > 2):
         USERLIST[0], USERLIST[2] = USERLIST[2], USERLIST[0]
 

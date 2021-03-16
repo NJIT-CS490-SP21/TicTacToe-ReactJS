@@ -55,7 +55,7 @@ class UserListLoginTestCase(unittest.TestCase):
 
 
 
-from app import remove_data_from_userlist
+from app import remove_user_from_userlist
 KEY_INPUT = 'input'
 KEY_EXPECTED = 'expected'
 
@@ -80,11 +80,11 @@ class UserListLogoutTestCase(unittest.TestCase):
         self.initial_userlist = copy.deepcopy(INIITIAL_USERLIST)
     
     def test_logout_success(self):
-        print("Start testing for add_user_to_userlist")
+        print("Start testing for remove_user_from_userlist")
         for test in self.successful_test_params:
             self.initial_userlist = copy.deepcopy(INIITIAL_USERLIST)
             print("Start test")
-            actual_result = remove_data_from_userlist(test[KEY_INPUT], self.initial_userlist)
+            actual_result = remove_user_from_userlist(test[KEY_INPUT], self.initial_userlist)
             expected_result = test[KEY_EXPECTED]
             
             print("\tA:", actual_result)
