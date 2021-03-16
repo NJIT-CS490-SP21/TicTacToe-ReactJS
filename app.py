@@ -83,7 +83,7 @@ def on_reset():
 def on_login(data):
     ''' When app receives a 'login' event, run this function '''
     print("Adding:", data)
-    USERLIST.append(data)
+    add_user_to_userlist(data, USERLIST)
     SOCKETIO.emit('login', USERLIST, broadcast=True, include_self=True)
 
     # append only if it does not exist within databasee
@@ -95,6 +95,11 @@ def on_login(data):
 
     SOCKETIO.emit('leaderboard', players, broadcast=True, include_self=True)
 
+def add_user_to_userlist(data, USERLIST):
+    ''' adds username to logged in userlists '''
+    USERLIST.append(data)
+    return USERLIST
+    
 def add_user_to_database(data):
     ''' Add user to database if it doesn't already exist within the database '''
     player = Player(username=data, score=100)
@@ -107,12 +112,15 @@ def on_logout(data):
     print("Removing", data)
 
     # swap player x with first player s if x is leaving
+    remove_data_from_userlist(data, USERLIST)
+    SOCKETIO.emit('logout', USERLIST, broadcast=True, include_self=True)
+    
+def remove_data_from_userlist(data, USERLIST):
     if (USERLIST[0] == data and len(USERLIST) > 2):
         USERLIST[0], USERLIST[2] = USERLIST[2], USERLIST[0]
 
     USERLIST.remove(data)
-    SOCKETIO.emit('logout', USERLIST, broadcast=True, include_self=True)
-
+    return USERLIST
 
 @SOCKETIO.on('match')
 def on_match(
