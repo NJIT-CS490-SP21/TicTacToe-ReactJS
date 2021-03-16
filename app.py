@@ -88,15 +88,18 @@ def on_login(data):
 
     # append only if it does not exist within databasee
     if Player.query.filter_by(username=data).first() is None:
-        player = Player(username=data, score=100)
-        DB.session.add(player)
-        DB.session.commit()
+        add_user_to_database(data)
 
     # grab leaderboard as an array
     players = get_leaderboard_as_array()
 
     SOCKETIO.emit('leaderboard', players, broadcast=True, include_self=True)
 
+def add_user_to_database(data):
+    ''' Add user to database if it doesn't already exist within the database '''
+    player = Player(username=data, score=100)
+    DB.session.add(player)
+    DB.session.commit()
 
 @SOCKETIO.on('logout')
 def on_logout(data):
@@ -139,26 +142,31 @@ def get_leaderboard_as_array():
 def update_leaderboard_score(win):
     ''' Update the database based upon the winner '''
     if win == 'X':  # add 1 to 'X', subtract 1 from 'O'
-        winner = Player.query.filter_by(username=USERLIST[0]).first()
-        winner.score = winner.score + 1
-
-        loser = Player.query.filter_by(username=USERLIST[1]).first()
-        loser.score = loser.score - 1
+        winnerIncrement(0)
+        loserDecrement(1)
+        
         DB.session.commit()
 
     elif win == 'O':  # subtract 1 from 'X', add 1 to 'O'
-        winner = Player.query.filter_by(username=USERLIST[1]).first()
-        winner.score = winner.score + 1
-
-        loser = Player.query.filter_by(username=USERLIST[0]).first()
-        loser.score = loser.score - 1
+        winnerIncrement(1)
+        loserDecrement(0)
+        
         DB.session.commit()
 
     elif win == 'Tie':
         # do nothing
         pass
 
-
+def winnerIncrement(index):
+    ''' increment winner in database based on userlist index'''
+    winner =  Player.query.filter_by(username=USERLIST[index]).first()
+    winner.score = winner.score + 1
+    
+def loserDecrement(index):
+    ''' decrement loser in database based on userlist index '''
+    loser =  Player.query.filter_by(username=USERLIST[index]).first()
+    loser.score = loser.score - 1
+    
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 SOCKETIO.run(
     APP,

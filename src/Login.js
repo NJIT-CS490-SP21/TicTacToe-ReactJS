@@ -88,7 +88,7 @@ function Login(props) {
     return (
       <div className="login">
         <h1>
-          Login
+          Login...
           {' '}
           <img src={logo} className="App-logo" alt="logo" />
           {' '}
@@ -110,11 +110,11 @@ function Login(props) {
           <button className="button" type="submit" onClick={onClickLogin}>
             Login
           </button>
-          <p3>
+          <P3>
             {' '}
             {usernameError}
             {' '}
-          </p3>
+          </P3>
         </div>
       </div>
     );
