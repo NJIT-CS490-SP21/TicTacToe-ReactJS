@@ -11,7 +11,7 @@ function Table(props) {
     if (leaders[i][0] === user) {
       result.push(
         <tr className="highlight">
-          <td>{leaders}</td>
+          <td>{leaders[i][0]}</td>
           <td>{leaders[i][1]}</td>
           <br />
         </tr>,

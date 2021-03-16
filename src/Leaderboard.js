@@ -20,8 +20,8 @@ function Leaderboard(props) {
 
   useEffect(() => {
     socket.on('leaderboard', (data) => {
-      // console.log('leaderboard event received!');
-      // console.log(data);
+      console.log('leaderboard event received!');
+      console.log(data);
 
       setLeaders(data);
     });
@@ -31,18 +31,27 @@ function Leaderboard(props) {
     return (
       <div>
         <leaderHeader> Leaderboard:</leaderHeader>
-        <button type="submit" className="LeaderboardButton" onClick={onClickLeaderboardButton}>
+        <button
+          type="submit"
+          className="LeaderboardButton"
+          onClick={onClickLeaderboardButton}
+        >
           Hide
         </button>
 
         <Table leaders={leaders} user={user} />
       </div>
     );
-  } if (!boolLeaders) {
+  }
+  if (!boolLeaders) {
     return (
       <div>
         <leaderHeader>Leaderboard:</leaderHeader>
-        <button type="submit" className="LeaderboardButton" onClick={onClickLeaderboardButton}>
+        <button
+          type="submit"
+          className="LeaderboardButton"
+          onClick={onClickLeaderboardButton}
+        >
           Show
         </button>
       </div>

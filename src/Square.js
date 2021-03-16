@@ -1,25 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './Square.css';
 
 function Square(props) {
-  const [square, setSquare] = useState('');
   const { onClick, index, value } = props;
 
   function onClickBox() {
     onClick(index);
-    setSquare(value);
   }
 
   return (
     <button type="submit" className="box" onClick={() => onClickBox()}>
-      {square}
+      {value}
     </button>
   );
 }
 
-function doNothing() { }
+function doNothing() {}
 
 Square.propTypes = {
   onClick: PropTypes.func,

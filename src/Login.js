@@ -49,36 +49,36 @@ function Login(props) {
   // LOGIN AND LOGOUT
   useEffect(() => {
     socket.on('login', (data) => {
-      // console.log('login event received!');
-      // console.log(data);
+      console.log('login event received!');
+      console.log(data);
       setUsers(data);
-      // console.log('Username is: ', username);
+      console.log('Username is: ', username);
 
       if (data[0] === username) {
-        // console.log('Permissions set to X');
+        console.log('Permissions set to X');
         setPermission('X');
       } else if (data[1] === username) {
-        // console.log('Permissions set to O');
+        console.log('Permissions set to O');
         setPermission('O');
       } else {
-        // console.log('Permissions set to S');
+        console.log('Permissions set to S');
         setPermission('S');
       }
     });
 
     socket.on('logout', (data) => {
-      // console.log('logout event received!');
-      // console.log(data);
+      console.log('logout event received!');
+      console.log(data);
       setUsers(data);
 
       if (data[0] === username) {
-        // console.log('Permissions set to X');
+        console.log('Permissions set to X');
         setPermission('X');
       } else if (data[1] === username) {
-        // console.log('Permissions set to O');
+        console.log('Permissions set to O');
         setPermission('O');
       } else {
-        // console.log('Permissions set to S');
+        console.log('Permissions set to S');
         setPermission('S');
       }
     });
@@ -118,7 +118,8 @@ function Login(props) {
         </div>
       </div>
     );
-  } if (login) {
+  }
+  if (login) {
     return (
       <div className="screen">
         <div>

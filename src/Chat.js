@@ -26,8 +26,8 @@ function Chat(props) {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg
     socket.on('chat', (data) => {
-      // console.log('Chat event received!');
-      // console.log(data);
+      console.log('Chat event received!');
+      console.log(data);
 
       // If the server sends a message (on behalf of another client), then we
       // add it to the list of messages to render it on the UI.
@@ -47,7 +47,9 @@ function Chat(props) {
         <input ref={inputRef} type="text" />
         {' '}
       </enterMessage>
-      <button type="submit" onClick={onClickButton}>Send</button>
+      <button type="submit" onClick={onClickButton}>
+        Send
+      </button>
       <ul>
         {messages.map((item) => (
           <ListItem name={item} />

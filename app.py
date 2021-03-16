@@ -70,7 +70,7 @@ def on_chat(data):
 def on_board(data):
     ''' When app receives a 'board' event, run this function '''
     print(data)
-    SOCKETIO.emit('board', data, broadcast=True, include_self=False)
+    SOCKETIO.emit('board', data, broadcast=True, include_self=True)
 
 
 @SOCKETIO.on('reset')

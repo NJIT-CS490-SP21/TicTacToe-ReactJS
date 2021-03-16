@@ -15,7 +15,8 @@ function Board(props) {
   function getValue(usr) {
     if (usr === 2) {
       return 'O';
-    } if (usr === 1) {
+    }
+    if (usr === 1) {
       return 'X';
     }
     return ' ';
@@ -114,10 +115,10 @@ function Board(props) {
     const tie2 = moveTie(boardCopy);
 
     if (mw) {
-      // console.log('Sending WINNER match emit', board);
+      console.log('Sending WINNER match emit', board);
       sock.emit('match', [mw, perm]);
     } else if (tie2) {
-      // console.log('Sending TIE match emit', board);
+      console.log('Sending TIE match emit', board);
       sock.emit('match', ['Tie', perm]);
     }
 
@@ -142,15 +143,15 @@ function Board(props) {
 
   useEffect(() => {
     sock.on('board', (data) => {
-      // console.log('Board event received!');
-      // console.log(data);
+      console.log('Board event received!');
+      console.log(data);
 
       setBoard(data.board);
       changeUser(data.user);
     });
 
     sock.on('reset', () => {
-      // console.log('Reset event received!');
+      console.log('Reset event received!');
       setBoard(Array(9).fill(null));
       setUser(1);
     });
@@ -159,7 +160,6 @@ function Board(props) {
   const winner = calculateWinner()[0];
   const tie = calculateTie();
 
-  // console.log('Update status');
   let status;
   if (winner) {
     status = `Winner: ${winner}`;
@@ -189,7 +189,11 @@ function Board(props) {
       </div>
       <br />
       {winner || tie ? (
-        <button type="submit" onClick={onClickPlayAgain}> Play Again </button>
+        <button type="submit" onClick={onClickPlayAgain}>
+          {' '}
+          Play Again
+          {' '}
+        </button>
       ) : null}
     </div>
   );
